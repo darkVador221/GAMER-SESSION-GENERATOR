@@ -23,7 +23,7 @@ app.use('/pair', pairRouter);
 // Fichiers statiques frontend
 app.use(express.static(path.join(__dirname, 'public')));
 
-// Catch-all pour SPA (si besoin)
+// Catch-all SPA fallback
 app.get('*', (req, res) => {
   res.sendFile(path.join(__dirname, 'public', 'index.html'));
 });
@@ -32,4 +32,5 @@ app.get('*', (req, res) => {
 const PORT = process.env.PORT || 3000;
 app.listen(PORT, () => {
   console.log(`Server started on port ${PORT}`);
+  console.log('Repo bot: https://github.com/darkVador221/Inco_dark');
 });
