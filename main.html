@@ -1,0 +1,132 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <link rel="shortcut icon" href="" type="image/x-icon" />
+  <style>
+    body {
+      background-image: url('https://files.catbox.moe/zzne7x.jpeg');
+      background-repeat: no-repeat;
+      background-size: cover;
+      background-position: center;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      height: 100vh;
+      margin: 0;
+      font-family: Arial, sans-serif;
+      color: #fff;
+    }
+
+    .button-container {
+      text-align: center;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      backdrop-filter: blur(10px);
+      padding: 20px;
+      border-radius: 20px;
+      background: rgba(0, 0, 0, 0.5);
+    }
+
+    h3 {
+      margin-bottom: 20px;
+      font-size: 1.8rem;
+      color: #00ffae;
+      animation: fadeIn 2s ease-out forwards;
+    }
+
+    .button {
+      width: 180px;
+      height: 45px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      margin: 10px 0;
+      padding: 0 15px;
+      border-radius: 10px;
+      border: none;
+      font-weight: bold;
+      color: #fff;
+      cursor: pointer;
+      text-decoration: none;
+      position: relative;
+      background: linear-gradient(0deg, #000000, #2c2c2c);
+      z-index: 1;
+    }
+
+    .button::before,
+    .button::after {
+      content: '';
+      position: absolute;
+      border-radius: 10px;
+      background: linear-gradient(45deg, #00ffd5, #00ff88, #ff0055);
+      background-size: 600%;
+      width: calc(100% + 4px);
+      height: calc(100% + 4px);
+      left: -2px;
+      top: -2px;
+      z-index: -1;
+      animation: glowing 8s linear infinite;
+    }
+
+    .button::after {
+      filter: blur(30px);
+    }
+
+    @keyframes glowing {
+      0% {
+        background-position: 0 0;
+      }
+      50% {
+        background-position: 400% 0;
+      }
+      100% {
+        background-position: 0 0;
+      }
+    }
+
+    footer {
+      position: fixed;
+      bottom: 0;
+      width: 100%;
+      background-color: #111;
+      color: #ccc;
+      padding: 10px 0;
+      text-align: center;
+      font-size: 14px;
+    }
+
+    @keyframes fadeIn {
+      from {
+        opacity: 0;
+        transform: translateY(-20px);
+      }
+      to {
+        opacity: 1;
+        transform: translateY(0);
+      }
+    }
+  </style>
+</head>
+<body>
+  <div class="button-container">
+    <h3>🔥 GAMER–XMD SESSION MANAGER 🔥</h3>
+
+    <a href="/qr" class="button" target="_blank">QR CODE</a>
+    <a href="/pair" class="button" target="_blank">PAIRING CODE</a>
+    <a href="https://github.com/darkVador221/Inco_dark/fork" class="button" target="_blank">FORK THE BOT</a>
+    <a href="https://whatsapp.com/channel/0029VbAF9iTJUM2aPl9plJ2U" class="button" target="_blank">WHATSAPP CHANNEL</a>
+    <a href="https://wa.me/221778271315" class="button" target="_blank">⚠️ ERROR SUPPORT</a>
+  </div>
+
+  <footer>
+    Powered by GAMER–XMD ⚙ | <span id="currentYear"></span> © All rights reserved
+  </footer>
+
+  <script>
+    document.getElementById("currentYear").textContent = new Date().getFullYear();
+  </script>
+</body>
+</html>
