@@ -23,14 +23,13 @@ app.use('/pair', pairRouter);
 // Fichiers statiques frontend
 app.use(express.static(path.join(__dirname, 'public')));
 
-// Catch-all SPA fallback
+// Catch-all
 app.get('*', (req, res) => {
   res.sendFile(path.join(__dirname, 'public', 'index.html'));
 });
 
-// Démarrage serveur
+// Serveur
 const PORT = process.env.PORT || 3000;
 app.listen(PORT, () => {
-  console.log(`Server started on port ${PORT}`);
-  console.log('Repo bot: https://github.com/darkVador221/Inco_dark');
+  console.log(`✅ Server started on port ${PORT}`);
 });
