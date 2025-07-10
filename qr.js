@@ -3,18 +3,16 @@ import QRCode from 'qrcode';
 
 const router = express.Router();
 
-// Exemple simple : on génère un QR code à partir d'une chaîne statique ou dynamique
 router.get('/', async (req, res) => {
   try {
-    // Tu peux remplacer cette valeur par un contenu dynamique (ex: session ID)
-    const qrData = 'https://darkgamer-session-connect.example.com/session/12345';
+    // Simule génération QR code (en base64 image)
+    // Ici, normalement, tu récupères la session Baileys et génères le QR
+    const sampleText = 'Dummy session QR code for Dark Gamer';
+    const qrImage = await QRCode.toDataURL(sampleText);
 
-    const qrImage = await QRCode.toDataURL(qrData);
-
-    res.json({ qr: qrImage, data: qrData });
+    res.json({ qr: qrImage });
   } catch (error) {
-    console.error('Erreur génération QR:', error);
-    res.status(500).json({ error: 'Erreur lors de la génération du QR code' });
+    res.status(500).json({ error: 'Erreur génération QR' });
   }
 });
 
