@@ -1,36 +1,27 @@
 import express from 'express';
-
 const router = express.Router();
-
-// En mémoire, stocke les paires { phone: code }
-const pairs = new Map();
 
 function generateCode() {
   const chars = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789';
   let code = '';
-  for(let i = 0; i < 8; i++) {
+  for (let i = 0; i < 8; i++) {
     code += chars.charAt(Math.floor(Math.random() * chars.length));
   }
   return code;
 }
 
-router.post('/', (req, res) => {
-  const { phone } = req.body;
-  if (!phone) {
-    return res.status(400).json({ success: false, error: 'Numéro de téléphone manquant' });
+router.post('/', async (req, res) => {
+  const { code } = req.body;
+  if (!code) {
+    return res.status(400).json({ success: false, error: 'Numéro manquant.' });
   }
 
-  // Ici tu peux ajouter une validation simple du numéro (ex: regex)
+  // ICI on simule un code pour la démonstration
+  const generatedCode = generateCode();
 
-  let code;
-  if (pairs.has(phone)) {
-    code = pairs.get(phone);
-  } else {
-    code = generateCode();
-    pairs.set(phone, code);
-  }
+  // Tu peux sauvegarder le numéro ou le code ici si tu veux
 
-  res.json({ success: true, code });
+  res.json({ success: true, message: `Code généré avec succès : ${generatedCode}` });
 });
 
 export default router;
