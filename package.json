@@ -3,6 +3,7 @@
   "version": "1.0.0",
   "description": "Session generator and manager for Dark Gamer WhatsApp Bot",
   "main": "server.js",
+  "type": "module",             <===== Ajoute cette ligne
   "scripts": {
     "start": "node server.js"
   },
