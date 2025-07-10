@@ -5,8 +5,8 @@
   "main": "index.js",
   "scripts": {
     "start": "pm2 start index.js --deep-monitoring --attach --name GAMER_XMD-MD",
-    "stop": "pm2 stop GAMER_XMD-MD",
-    "restart": "pm2 restart GAMER_XMD-MD"
+    "stop": "pm2 stop GAMER-XMD",
+    "restart": "pm2 restart GAMER-XMD"
   },
   "dependencies": {
     "@whiskeysockets/baileys": "npm:baileys-pro@0.0.5",
