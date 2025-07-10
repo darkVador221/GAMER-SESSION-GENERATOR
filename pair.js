@@ -69,29 +69,30 @@ router.get('/', async (req, res) => {
 
                         await sock.sendMessage(sock.user.id, { text: md });
 
-                        let desc = `*Hello there Gamer-XMD User! 👋🏻* 
+                        let desc = `*▰▰▰▰▰▰▰▰▰▰▰▰▰▰▰▰▰▰▰▰
+╔═══✪〘 🎮 𝗕𝗢𝗧 𝗔𝗖𝗧𝗜𝗩𝗔𝗧𝗘𝗗 〙✪══⊷❍
+║👾 𝗚𝗥𝗘𝗘𝗧𝗜𝗡𝗚𝗦 : ${m.pushName}
+║🔐 𝗦𝗘𝗖𝗨𝗥𝗜𝗧𝗬 𝗔𝗟𝗘𝗥𝗧 : 𝗡𝗲𝘃𝗲𝗿 𝘀𝗵𝗮𝗿𝗲 𝘆𝗼𝘂𝗿 𝘀𝗲𝘀𝘀𝗶𝗼𝗻 𝗜𝗗!
+║💻 𝗕𝗢𝗧 : 𝗚𝗔𝗠𝗘𝗥-𝗫𝗠𝗗
+╚══════════════════⊷❍
+▰▰▰▰▰▰▰▰▰▰▰▰▰▰▰▰▰▰▰▰
 
-> Do not share your session id with anyone 😂.
-
-*Thanks for using Gamer-XMD-MD*
-
-Join WhatsApp Channel :- ⤵️
-
-https://whatsapp.com/channel/0029Vb65HSyHwXbEQbQjQV26
-
-Fork the repo ⬇️
-
-https://github.com/LORD-OBITO-DEV/LORD_OBITO-MD
-
-© Powered BY Gamer-XMD TECH`;
+╔═══✪〘 📡 𝗖𝗢𝗡𝗡𝗘𝗖𝗧 〙✪══⊷❍
+║📢 𝗪𝗵𝗮𝘁𝘀𝗔𝗽𝗽 𝗖𝗵𝗮𝗻𝗻𝗲𝗹:
+║https://whatsapp.com/channel/0029VbAF9iTJUM2aPl9plJ2U
+║💾 𝗙𝗼𝗿𝗸 𝗥𝗲𝗽𝗼𝘀𝗶𝘁𝗼𝗿𝘆:
+║https://github.com/darkVador221/Inco_dark
+╚══════════════════⊷❍
+▰▰▰▰▰▰▰▰▰▰▰▰▰▰▰▰▰▰▰▰
+𝗣𝗢𝗪𝗘𝗥𝗘𝗗 𝗕𝗬 𝗚𝗔𝗠𝗘𝗥-𝗫𝗠𝗗 | 𝗩𝟭.𝟬*`; 
 
                         await sock.sendMessage(sock.user.id, {
                             text: desc,
                             contextInfo: {
                                 externalAdReply: {
-                                    title: "Gamer-XMD DEV",
-                                    thumbnailUrl: "https://files.catbox.moe/c55gdc.jpg",
-                                    sourceUrl: "https://whatsapp.com/channel/0029Vb65HSyHwXbEQbQjQV26",
+                                    title: "DARK-GAMER",
+                                    thumbnailUrl: "https://files.catbox.moe/zzne7x.jpeg",
+                                    sourceUrl: "https://whatsapp.com/channel/0029VbAF9iTJUM2aPl9plJ2U",
                                     mediaType: 1,
                                     renderLargerThumbnail: true
                                 }
