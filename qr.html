@@ -1,0 +1,93 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Gamer-XMD QR Code</title>
+  <style>
+    body {
+      background-image: url('https://files.catbox.moe/vewh4c.jpeg');
+      background-size: cover;
+      background-position: center;
+      background-repeat: no-repeat;
+      color: white;
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      height: 100vh;
+      margin: 0;
+      text-align: center;
+      backdrop-filter: blur(8px);
+    }
+
+    h1 {
+      margin-bottom: 1rem;
+      font-weight: 900;
+      color: #00ff00;
+      text-shadow: 0 0 10px #00ff00;
+    }
+
+    #qr {
+      width: 300px;
+      height: 300px;
+      background: #111;
+      border: 4px solid #00ff00;
+      border-radius: 15px;
+      padding: 10px;
+      box-sizing: border-box;
+      margin-bottom: 20px;
+    }
+
+    #status {
+      font-size: 1.2rem;
+      opacity: 0.85;
+      background: rgba(0, 0, 0, 0.4);
+      padding: 10px 20px;
+      border-radius: 10px;
+    }
+  </style>
+</head>
+<body>
+  <h1>🛡️ Gamer-XMD QR Code 🛡️</h1>
+  <canvas id="qr"></canvas>
+  <div id="status">Génération du QR code...</div>
+
+  <script src="https://cdn.jsdelivr.net/npm/qrcode/build/qrcode.min.js"></script>
+  <script>
+    async function fetchQr() {
+      const res = await fetch('/qr');
+      const reader = res.body.getReader();
+      const decoder = new TextDecoder();
+      let done = false;
+      let qrData = '';
+
+      while (!done) {
+        const { value, done: doneReading } = await reader.read();
+        done = doneReading;
+        if (value) {
+          qrData += decoder.decode(value);
+          try {
+            const obj = JSON.parse(qrData);
+            if (obj.qr) {
+              QRCode.toCanvas(document.getElementById('qr'), obj.qr, function (error) {
+                if (error) {
+                  document.getElementById('status').textContent = '❌ Erreur lors de la génération du QR code.';
+                  return console.error(error);
+                }
+                document.getElementById('status').textContent = '✅ Scanne le QR code avec ton WhatsApp.';
+              });
+              break;
+            }
+          } catch (e) {
+            // Attente des données JSON complètes
+          }
+        }
+      }
+    }
+
+    fetchQr();
+  </script>
+</body>
+</html>
