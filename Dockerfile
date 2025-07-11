@@ -1,20 +1,21 @@
-# Utilise une image Node.js officielle
-FROM node:18
+FROM node:lts-buster
 
-# Crée un répertoire de travail
-WORKDIR /app
+RUN apt-get update && \
+  apt-get install -y \
+  ffmpeg \
+  imagemagick \
+  webp && \
+  apt-get upgrade -y && \
+  rm -rf /var/lib/apt/lists/*
 
-# Copie les fichiers package.json et package-lock.json
-COPY package*.json ./
+WORKDIR /usr/src/app
 
-# Installe les dépendances
-RUN npm install
+COPY package.json .
 
-# Copie tout le reste des fichiers
+RUN npm install && npm install -g qrcode-terminal pm2
+
 COPY . .
 
-# Expose le port 8000 utilisé par le serveur
-EXPOSE 8000
+EXPOSE 5000
 
-# Démarre l'application
-CMD ["node", "index.js"]
+CMD ["npm", "start"]
