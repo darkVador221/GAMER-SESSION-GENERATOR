@@ -18,5 +18,8 @@
     "path": "^0.12.7",
     "megajs": "1.1.7",
     "async-mutex": "0.4.1"
+  },
+  "engines": {
+    "node": ">=18"
   }
 }
