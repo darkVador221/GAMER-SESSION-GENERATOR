@@ -1,8 +1,14 @@
 const { MongoClient } = require('mongodb');
 const crypto = require('crypto');
+require('dotenv').config();
 
 class SessionManager {
     constructor() {
+        // Vérification de la clé de session
+        if (!process.env.SESSION_KEY || process.env.SESSION_KEY.length !== 64) {
+            throw new Error("❌ SESSION_KEY invalide - Doit être 32 octets en hexadécimal (64 caractères)");
+        }
+        
         this.uri = process.env.MONGODB_URI;
         this.dbName = 'GAMER-XMD';
         this.collectionName = 'sessions';
@@ -38,22 +44,29 @@ class SessionManager {
             data: encrypted,
             createdAt: new Date(),
             user: "vador2899",
-            status: "active"
+            status: "active",
+            bot: process.env.BOT_NAME || "GAMER-XMD"
         });
 
+        console.log(`💾 Session ${sessionId} sauvegardée dans MongoDB`);
         return sessionId;
     }
 
     encrypt(data) {
-        const iv = crypto.randomBytes(16);
-        const cipher = crypto.createCipheriv(
-            'aes-256-cbc',
-            Buffer.from(process.env.SESSION_KEY, 'hex'),
-            iv
-        );
-        let encrypted = cipher.update(JSON.stringify(data), 'utf8', 'hex');
-        encrypted += cipher.final('hex');
-        return iv.toString('hex') + ':' + encrypted;
+        try {
+            const iv = crypto.randomBytes(16);
+            const cipher = crypto.createCipheriv(
+                'aes-256-cbc',
+                Buffer.from(process.env.SESSION_KEY, 'hex'),
+                iv
+            );
+            let encrypted = cipher.update(JSON.stringify(data), 'utf8', 'hex');
+            encrypted += cipher.final('hex');
+            return iv.toString('hex') + ':' + encrypted;
+        } catch (error) {
+            console.error("❌ Erreur chiffrement session:", error.message);
+            throw new Error("Échec du chiffrement de la session");
+        }
     }
 }
 
