@@ -1,11 +1,11 @@
-const { makeid } = require('../core/utils');
 const express = require('express');
 const router = express.Router();
-const { Client } = require('whatsapp-web.js');
-const SessionManager = require('../core/sessionManager');
+const { Client, RemoteAuth } = require('whatsapp-web.js');
+const SessionManager = require('../core/SessionManager');
+const path = require('path');
 
 router.get('/', (req, res) => {
-    res.sendFile('qr.html', { root: 'public' });
+    res.sendFile(path.join(__dirname, '../public/qr.html'));
 });
 
 router.get('/api/qr', async (req, res) => {
@@ -17,8 +17,8 @@ router.get('/api/qr', async (req, res) => {
         })
     });
 
-    client.on('qr', (qr) => {
-        res.json({ qr });
+    client.once('qr', (qr) => {
+        return res.json({ qr });
     });
 
     client.initialize();
