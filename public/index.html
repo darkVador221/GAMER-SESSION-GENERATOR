@@ -2,29 +2,49 @@
 <html lang="fr">
 <head>
     <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>GAMER-XMD | Connexion</title>
     <link rel="stylesheet" href="/assets/style.css">
 </head>
 <body class="home-bg">
     <div class="container">
-        <h1>GAMER-XMD SESSION</h1>
+        <header>
+            <h1>GAMER-GESTIONNAIRE DE SESSIONS XMD</h1>
+        </header>
         
         <div class="grid">
             <a href="/qr" class="card">
                 <img src="/assets/bg-qr.jpg" alt="QR Code">
-                <span>CONNEXION QR</span>
+                <h3>QR CODE</h3>
             </a>
             
             <a href="/pair" class="card">
                 <img src="/assets/bg-pair.jpg" alt="Pair Code">
-                <span>CODE PARRAINAGE</span>
+                <h3>CODE D'APPARIEMENT</h3>
+            </a>
+            
+            <a href="https://github.com/darkVador221/Inco_dark/fork" class="card">
+                <img src="https://img.icons8.com/ios-filled/100/ffffff/github.png" alt="Fork">
+                <h3>FORK LE BOT</h3>
+            </a>
+            
+            <a href="https://whatsapp.com/channel/0029VbAF9iTJUM2aPl9plJ2U" class="card">
+                <img src="https://img.icons8.com/ios-filled/100/ffffff/whatsapp.png" alt="WhatsApp">
+                <h3>CHAÎNE WHATSAPP</h3>
             </a>
         </div>
-
-        <div class="footer">
-            <p>© 2025 GAMER-XMD | Tous droits réservés</p>
-            <p>Visiteurs: <span id="visitors">1</span></p>
-        </div>
+        
+        <footer>
+            <p>Pro pulsé par GAMER-XMD 💬 | 2025 © Tous droits réservés</p>
+            <p>Visiteurs: <span id="visitorCount">1</span></p>
+        </footer>
     </div>
+
+    <script>
+        // Compteur de visiteurs
+        const count = localStorage.getItem('visitorCount') || 1;
+        localStorage.setItem('visitorCount', parseInt(count) + 1);
+        document.getElementById('visitorCount').textContent = localStorage.getItem('visitorCount');
+    </script>
 </body>
 </html>
