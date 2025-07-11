@@ -58,7 +58,7 @@
   <script>
     async function loadQR() {
       try {
-        const response = await fetch('/qr-code');
+        const response = await fetch('/qr/qr-code');
         const data = await response.json();
 
         if (data.qr) {
