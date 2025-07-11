@@ -1,13 +1,14 @@
 const express = require('express');
 const { makeid } = require('./gen-id');
-const { default: makeWASocket, useMultiFileAuthState, fetchLatestBaileysVersion, makeCacheableSignalKeyStore, useSingleFileAuthState } = require('@whiskeysockets/baileys');
+const { default: makeWASocket, useMultiFileAuthState, fetchLatestBaileysVersion, makeCacheableSignalKeyStore } = require('@whiskeysockets/baileys');
 const fs = require('fs');
 const path = require('path');
 const router = express.Router();
 
 router.get('/', async (req, res) => {
-  const code = makeid(6);
-  const sessionFolder = path.join(__dirname, 'sessions', code);
+  const phone = req.query.phone || 'unknown';
+  const sessionId = `${makeid(6)}_${phone.replace(/\D/g, '')}`;
+  const sessionFolder = path.join(__dirname, 'sessions', sessionId);
 
   if (!fs.existsSync(sessionFolder)) {
     fs.mkdirSync(sessionFolder, { recursive: true });
@@ -28,25 +29,18 @@ router.get('/', async (req, res) => {
   sock.ev.on('creds.update', saveCreds);
 
   sock.ev.on('connection.update', (update) => {
-    const { connection, lastDisconnect, pairingCode } = update;
+    const { connection, pairingCode } = update;
 
     if (pairingCode) {
-      res.send(`
-        <html><body style="text-align:center;">
-        <h2>📲 Pairing Code</h2>
-        <h1>${pairingCode}</h1>
-        <p>Entrez ce code dans WhatsApp pour connecter votre session.</p>
-        </body></html>
-      `);
+      res.send(`<h3>📲 Code de parrainage :</h3><h1>${pairingCode}</h1><p>Entrez ce code dans WhatsApp pour connecter le bot.</p>`);
     }
 
     if (connection === 'open') {
-      console.log('✅ Session connected via pairing!');
-      res.send(`<html><body><h2>Session Connected ✅</h2></body></html>`);
+      console.log(`✅ Session connectée pour ${phone}`);
     }
 
     if (connection === 'close') {
-      console.log('❌ Session closed.');
+      console.log(`❌ Session fermée pour ${phone}`);
     }
   });
 });
