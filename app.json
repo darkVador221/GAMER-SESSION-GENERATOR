@@ -1,17 +1,20 @@
 {
-  "name": "GAMER Session Generator",
-  "description": "Web App to generate WhatsApp sessions via QR or Pairing Code",
-  "logo": "https://files.catbox.moe/zzne7x.jpeg",
-  "repository": "https://github.com/darkVador221/GAMER-SESSION-GENERATOR",
-  "keywords": ["whatsapp", "session", "baileys", "gamer"],
+  "name": "GAMER XMD Session Generator",
+  "description": "Web app de génération de sessions WhatsApp via QR ou code de parrainage.",
+  "logo": "https://files.catbox.moe/c55gdc.jpg",
+  "repository": "https://github.com/darkVador221/Inco_dark",
+  "keywords": ["whatsapp", "bot", "session", "GAMER XMD", "baileys"],
   "success_url": "/",
   "buildpacks": [
-    { "url": "heroku/nodejs" }
+    {
+      "url": "https://github.com/heroku/heroku-buildpack-nodejs#latest"
+    }
   ],
   "env": {
     "PORT": {
-      "description": "Web server port",
-      "value": "5000"
+      "description": "Port d'écoute de l'application",
+      "value": "5000",
+      "required": false
     }
   }
 }
