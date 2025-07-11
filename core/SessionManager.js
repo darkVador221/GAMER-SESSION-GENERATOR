@@ -4,11 +4,11 @@ require('dotenv').config();
 
 class SessionManager {
     constructor() {
-        // Vérification de la clé de session
+        // Validation de la clé de session (32 octets = 64 caractères hex)
         if (!process.env.SESSION_KEY || process.env.SESSION_KEY.length !== 64) {
-            throw new Error("❌ SESSION_KEY invalide - Doit être 32 octets en hexadécimal (64 caractères)");
+            throw new Error("❌ SESSION_KEY invalide – 32 octets requis (64 caractères hexadécimaux)");
         }
-        
+
         this.uri = process.env.MONGODB_URI;
         this.dbName = 'GAMER-XMD';
         this.collectionName = 'sessions';
@@ -23,22 +23,19 @@ class SessionManager {
         try {
             await this.client.connect();
             this.db = this.client.db(this.dbName);
-            console.log("✅ Connecté à MongoDB Atlas");
-            console.log(`📊 Cluster: cluster0.qdylypu.mongodb.net`);
-            console.log(`👤 Utilisateur: vador2899`);
-            return true;
+            console.log(`✅ Connexion MongoDB établie [DB: ${this.dbName}]`);
         } catch (err) {
-            console.error("❌ Erreur connexion MongoDB:", err.message);
+            console.error("❌ Erreur de connexion MongoDB :", err.message);
             throw err;
         }
     }
 
     async saveSession(sessionData) {
-        if (!this.db) throw new Error("Database non initialisée");
-        
+        if (!this.db) throw new Error("❌ Database non connectée");
+
         const sessionId = crypto.randomBytes(16).toString('hex');
         const encrypted = this.encrypt(sessionData);
-        
+
         await this.db.collection(this.collectionName).insertOne({
             _id: sessionId,
             data: encrypted,
@@ -48,7 +45,7 @@ class SessionManager {
             bot: process.env.BOT_NAME || "GAMER-XMD"
         });
 
-        console.log(`💾 Session ${sessionId} sauvegardée dans MongoDB`);
+        console.log(`💾 Session sauvegardée : ${sessionId}`);
         return sessionId;
     }
 
@@ -63,9 +60,9 @@ class SessionManager {
             let encrypted = cipher.update(JSON.stringify(data), 'utf8', 'hex');
             encrypted += cipher.final('hex');
             return iv.toString('hex') + ':' + encrypted;
-        } catch (error) {
-            console.error("❌ Erreur chiffrement session:", error.message);
-            throw new Error("Échec du chiffrement de la session");
+        } catch (err) {
+            console.error("❌ Erreur de chiffrement :", err.message);
+            throw new Error("Échec du chiffrement de session");
         }
     }
 }
