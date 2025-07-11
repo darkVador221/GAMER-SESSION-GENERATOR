@@ -2,30 +2,28 @@ FROM node:18-alpine
 
 WORKDIR /app
 
-# Installer dépendances système (qrcode, puppeteer, etc.)
-RUN apk add --no-cache curl python3 make g++ chromium
+# Dépendances système
+RUN apk add --no-cache curl python3 make g++
 
-# Préparer les images de fond
+# Récupérer les images (assets)
 RUN mkdir -p public/assets && \
     curl -o public/assets/bg-home.jpg https://files.catbox.moe/zzne7x.jpeg && \
     curl -o public/assets/bg-pair.jpg https://files.catbox.moe/74spgs.jpeg && \
     curl -o public/assets/bg-qr.jpg https://files.catbox.moe/vewh4c.jpeg
 
-# Installer les dépendances
+# Copie et installation des dépendances
 COPY package*.json ./
-RUN npm install
+RUN npm install --production
 
-# Copier le code de l'app
+# Copie du code
 COPY . .
 
-# Variables d’environnement
+# Config
 ENV PORT=3000
-ENV PUPPETEER_EXECUTABLE_PATH=/usr/bin/chromium-browser
 EXPOSE 3000
 
-# Utilisateur non-root (sécurité)
+# Sécurité
 RUN addgroup -S appgroup && adduser -S appuser -G appgroup
 USER appuser
 
-# Lancer l’app
 CMD ["node", "server/index.js"]
