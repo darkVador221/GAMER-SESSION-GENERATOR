@@ -3,7 +3,7 @@ const app = express();
 const http = require('http').createServer(app);
 const io = require('socket.io')(http);
 const path = require('path');
-const SessionManager = require('../core/SessionManager');
+const SessionManager = require('../core/sessionManager'); // ⚠ nom en minuscule ici
 const { welcomeMessage } = require('../core/messageTemplates');
 const { Client, RemoteAuth } = require('whatsapp-web.js');
 
@@ -24,7 +24,7 @@ app.use('/qr', qrRoute);
 app.use('/pair', pairRoute);
 app.use('/health', healthRoute);
 
-// API session WhatsApp
+// API : démarrer une session WhatsApp
 app.post('/api/start-session', async (req, res) => {
     try {
         const client = new Client({
@@ -61,7 +61,7 @@ app.post('/api/start-session', async (req, res) => {
     }
 });
 
-// Démarrage du serveur
+// Lancer le serveur
 const PORT = process.env.PORT || 3000;
 http.listen(PORT, async () => {
     console.log(`🌐 Serveur démarré sur le port ${PORT}`);
