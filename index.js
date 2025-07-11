@@ -3,7 +3,9 @@ const bodyParser = require("body-parser");
 const path = require('path');
 const app = express();
 
-__path = process.cwd();
+console.log('🚀 GAMER XMD Server starting...');
+
+const __path = process.cwd();
 const PORT = process.env.PORT || 8000;
 
 require('events').EventEmitter.defaultMaxListeners = 500;
@@ -29,8 +31,10 @@ app.get('/', (req, res) => {
   res.sendFile(path.join(__path, 'main.html'));
 });
 
-app.listen(PORT, () => {
-  console.log(`🟢 GAMER XMD running on port ${PORT}`);
+const server = app.listen(PORT, '0.0.0.0', () => {
+  console.log(`🟢 GAMER XMD running on http://localhost:${PORT}`);
 });
+server.keepAliveTimeout = 120000;
+server.headersTimeout = 120000;
 
 module.exports = app;
