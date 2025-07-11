@@ -1,85 +1,19 @@
 const { makeid } = require('./gen-id');
-const express = require('express');
-const fs = require('fs');
-const { startBot } = require('./bot');
-const pino = require("pino");
-const { default: makeWASocket, useMultiFileAuthState, delay, Browsers, makeCacheableSignalKeyStore } = require('@whiskeysockets/baileys');
 
-const { upload } = require('./mega');
+// Exemple : reçoit une requête avec ?phone=221778271315
+module.exports = async (req, res) => {
+  try {
+    const { phone } = req.query;
 
-let router = express.Router();
-
-function removeFile(FilePath) {
-    if (!fs.existsSync(FilePath)) return false;
-    fs.rmSync(FilePath, { recursive: true, force: true });
-}
-
-router.get('/', async (req, res) => {
-    const id = makeid();
-    let num = req.query.number;
-
-    if (!num || num.length < 6) {
-        return res.status(400).json({ code: '❗ Numéro invalide' });
+    if (!phone || !/^\d{9,15}$/.test(phone)) {
+      return res.status(400).json({ error: 'Numéro invalide. Exemple : 221778271315' });
     }
 
-    const { state, saveCreds } = await useMultiFileAuthState('./temp/' + id);
-    try {
-        let sock = makeWASocket({
-            auth: {
-                creds: state.creds,
-                keys: makeCacheableSignalKeyStore(state.keys, pino({ level: "fatal" }).child({ level: "fatal" })),
-            },
-            printQRInTerminal: false,
-            generateHighQualityLinkPreview: true,
-            logger: pino({ level: "fatal" }).child({ level: "fatal" }),
-            syncFullHistory: false,
-            browser: Browsers.macOS('Safari')
-        });
-
-        if (!sock.authState.creds.registered) {
-            await delay(1500);
-            num = num.replace(/[^0-9]/g, '');
-            const code = await sock.requestPairingCode(num);
-            if (!res.headersSent) {
-                return res.json({ code });
-            }
-        }
-
-        sock.ev.on('creds.update', saveCreds);
-
-        sock.ev.on("connection.update", async (s) => {
-            const { connection } = s;
-
-            if (connection == "open") {
-                await delay(5000);
-                await startBot(id);
-
-                let rf = __dirname + `/temp/${id}/creds.json`;
-
-                try {
-                    const mega_url = await upload(fs.createReadStream(rf), `${sock.user.id}.json`);
-                    const string_session = mega_url.replace('https://mega.nz/file/', '');
-                    let md = "GAMER~XMD~" + string_session;
-
-                    await sock.sendMessage(sock.user.id, { text: md });
-                } catch (e) {
-                    await sock.sendMessage(sock.user.id, { text: `Erreur : ${e.message || e}` });
-                }
-
-                await delay(10);
-                await sock.ws.close();
-                removeFile('./temp/' + id);
-                process.exit();
-            }
-        });
-
-    } catch (err) {
-        console.log("Service Error");
-        removeFile('./temp/' + id);
-        if (!res.headersSent) {
-            res.json({ code: "❗ Erreur réseau" });
-        }
-    }
-});
-
-module.exports = router;
+    const code = makeid(8);
+    console.log(`📦 Nouveau code généré pour ${phone} : ${code}`);
+    res.json({ code });
+  } catch (e) {
+    console.error('Erreur génération de pair code:', e);
+    res.status(500).json({ error: 'Erreur serveur interne.' });
+  }
+};
