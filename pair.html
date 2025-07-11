@@ -2,85 +2,76 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <title>Gamer-XMD Pairing Code</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>GAMER XMD - Pairing Code</title>
   <style>
     body {
       background-image: url('https://files.catbox.moe/zzne7x.jpeg');
       background-size: cover;
       background-position: center;
-      background-repeat: no-repeat;
-      color: white;
-      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      justify-content: center;
-      height: 100vh;
+      font-family: Arial, sans-serif;
       margin: 0;
-      backdrop-filter: blur(8px);
+      padding: 0;
+      color: #fff;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      height: 100vh;
     }
 
-    h1 {
-      margin-bottom: 1rem;
-      font-weight: 900;
-      color: #00ff00;
-      text-shadow: 0 0 10px #00ff00;
-    }
-
-    #code {
-      font-size: 2rem;
-      padding: 15px 25px;
-      border: 3px solid #00ff00;
-      border-radius: 12px;
-      background: linear-gradient(90deg, #000000, #002200);
-      user-select: all;
-      cursor: pointer;
-      transition: 0.3s;
-      margin-bottom: 20px;
-    }
-
-    #code:hover {
-      background: linear-gradient(90deg, #002200, #004400);
-      box-shadow: 0 0 15px #00ff00;
-    }
-
-    p {
-      font-size: 1rem;
-      opacity: 0.85;
+    .container {
+      background: rgba(0, 0, 0, 0.7);
+      padding: 30px;
+      border-radius: 15px;
       text-align: center;
-      max-width: 80%;
-      background: rgba(0, 0, 0, 0.5);
+      backdrop-filter: blur(10px);
+    }
+
+    input[type="text"] {
+      padding: 10px;
+      width: 80%;
+      border-radius: 8px;
+      border: none;
+      margin-bottom: 15px;
+      font-size: 16px;
+    }
+
+    button {
       padding: 10px 20px;
-      border-radius: 10px;
+      border-radius: 8px;
+      border: none;
+      font-weight: bold;
+      background: linear-gradient(45deg, #00ffd5, #00ff88, #ff0055);
+      color: #fff;
+      cursor: pointer;
+      font-size: 16px;
+    }
+
+    .code {
+      margin-top: 20px;
+      font-size: 22px;
+      color: #00ffae;
     }
   </style>
 </head>
 <body>
-  <h1>🛡️ Gamer-XMD Pairing Code 🛡️</h1>
-  <div id="code">Chargement du code...</div>
-  <p>Scanne ce code dans WhatsApp ou copie-le pour te connecter immédiatement avec ton bot Gamer-XMD.</p>
+  <div class="container">
+    <h2>🔒 GÉNÉRATION DE CODE DE PARRAINAGE</h2>
+    <input type="text" id="phone" placeholder="Entrer votre numéro WhatsApp" />
+    <br />
+    <button onclick="generatePairCode()">Générer le code</button>
+    <div class="code" id="pairCode"></div>
+  </div>
 
   <script>
-    async function fetchPairCode() {
-      try {
-        const response = await fetch('/pair');
-        const data = await response.json();
-        if(data.code) {
-          const codeDiv = document.getElementById('code');
-          codeDiv.textContent = data.code;
-          codeDiv.onclick = () => {
-            navigator.clipboard.writeText(data.code);
-            alert('✅ Code copié dans le presse-papier !');
-          };
-        } else {
-          document.getElementById('code').textContent = '❌ Erreur lors de la récupération du code.';
-        }
-      } catch (err) {
-        document.getElementById('code').textContent = '❌ Erreur réseau.';
-      }
+    async function generatePairCode() {
+      const phone = document.getElementById('phone').value.trim();
+      if (!phone) return alert('Veuillez entrer votre numéro.');
+
+      const response = await fetch('/pair?phone=' + encodeURIComponent(phone));
+      const html = await response.text();
+      document.getElementById('pairCode').innerHTML = html;
     }
-    fetchPairCode();
   </script>
 </body>
 </html>
