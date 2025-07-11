@@ -1,23 +1,24 @@
 {
   "name": "gamer-session-generator",
   "version": "1.0.0",
-  "description": "Site de génération de session WhatsApp (QR + code de parrainage) pour Gamer-XMD",
+  "description": "Générateur de session WhatsApp pour GAMER-XMD",
   "main": "index.js",
   "scripts": {
     "start": "node index.js"
   },
-  "dependencies": {
-    "@whiskeysockets/baileys": "^6.7.1",
-    "body-parser": "^1.20.2",
-    "express": "^4.18.2",
-    "form-data": "^4.0.0",
-    "fs": "^0.0.1-security",
-    "pino": "^8.16.0"
-  },
-  "engines": {
-    "node": ">=18"
-  },
-  "keywords": [],
+  "keywords": [
+    "whatsapp",
+    "bot",
+    "session",
+    "gamer-xmd"
+  ],
   "author": "darkVador221",
-  "license": "MIT"
+  "license": "MIT",
+  "dependencies": {
+    "@whiskeysockets/baileys": "^6.17.16",
+    "express": "^4.18.2",
+    "pino": "^8.14.2",
+    "megajs": "^1.0.7",
+    "body-parser": "^1.20.2"
+  }
 }
