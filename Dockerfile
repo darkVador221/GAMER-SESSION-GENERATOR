@@ -1,21 +1,20 @@
-FROM node:lts-buster
+# Utilise une image Node.js officielle
+FROM node:18
 
-RUN apt-get update && \
-  apt-get install -y \
-  ffmpeg \
-  imagemagick \
-  webp && \
-  apt-get upgrade -y && \
-  rm -rf /var/lib/apt/lists/*
-  
-WORKDIR /usr/src/app
+# Crée un répertoire de travail
+WORKDIR /app
 
-COPY package.json .
+# Copie les fichiers package.json et package-lock.json
+COPY package*.json ./
 
-RUN npm install && npm install -g qrcode-terminal pm2
+# Installe les dépendances
+RUN npm install
 
+# Copie tout le reste des fichiers
 COPY . .
 
-EXPOSE 5000
+# Expose le port 8000 utilisé par le serveur
+EXPOSE 8000
 
-CMD ["npm", "start"]
+# Démarre l'application
+CMD ["node", "index.js"]
