@@ -1,91 +1,35 @@
-const { makeid } = require('./gen-id');
-const express = require('express');
+const { default: makeWASocket, useSingleFileAuthState } = require('@whiskeysockets/baileys');
 const fs = require('fs');
-const pino = require("pino");
-const { default: makeWASocket, useMultiFileAuthState, delay, Browsers, makeCacheableSignalKeyStore } = require('@whiskeysockets/baileys');
-const { upload } = require('./mega');
+const path = require('path');
 
-let router = express.Router();
+module.exports = async (req, res) => {
+  try {
+    const sessionPath = './sessions/gamer-xmd.json';
 
-function removeFile(FilePath) {
-    if (!fs.existsSync(FilePath)) return false;
-    fs.rmSync(FilePath, { recursive: true, force: true });
-}
+    // Crée le dossier si besoin
+    if (!fs.existsSync('./sessions')) fs.mkdirSync('./sessions');
 
-router.get('/', async (req, res) => {
-    const id = makeid();
+    const { state, saveState } = useSingleFileAuthState(sessionPath);
+    const sock = makeWASocket({
+      auth: state,
+      printQRInTerminal: false
+    });
 
-    const { state, saveCreds } = await useMultiFileAuthState('./temp/' + id);
-    try {
-        let sock = makeWASocket({
-            auth: {
-                creds: state.creds,
-                keys: makeCacheableSignalKeyStore(state.keys, pino({ level: "fatal" }).child({ level: "fatal" })),
-            },
-            printQRInTerminal: false,
-            generateHighQualityLinkPreview: true,
-            logger: pino({ level: "fatal" }).child({ level: "fatal" }),
-            syncFullHistory: false,
-            browser: Browsers.macOS('Safari')
-        });
+    sock.ev.on('creds.update', saveState);
 
-        let sent = false;
+    sock.ev.on('connection.update', (update) => {
+      const { connection, qr } = update;
 
-        sock.ev.on('connection.update', async (update) => {
-            const { connection, lastDisconnect, qr } = update;
+      if (qr) {
+        res.json({ qr });
+      }
 
-            if (qr && !sent) {
-                sent = true;
-                if (!res.headersSent) {
-                    res.json({ qr });
-                }
-            }
-
-            if (connection === "open") {
-                await delay(5000);
-                let rf = __dirname + `/temp/${id}/creds.json`;
-
-                try {
-                    const mega_url = await upload(fs.createReadStream(rf), `${sock.user.id}.json`);
-                    const string_session = mega_url.replace('https://mega.nz/file/', '');
-                    let md = "GAMER~XMD~" + string_session;
-
-                    await sock.sendMessage(sock.user.id, { text: md });
-
-                    await sock.sendMessage(sock.user.id, {
-                        text: `✅ Bot connecté avec succès !`,
-                        contextInfo: {
-                            externalAdReply: {
-                                title: "DARK-GAMER",
-                                thumbnailUrl: "https://files.catbox.moe/zzne7x.jpeg",
-                                sourceUrl: "https://whatsapp.com/channel/0029VbAF9iTJUM2aPl9plJ2U",
-                                mediaType: 1,
-                                renderLargerThumbnail: true
-                            }
-                        }
-                    });
-                } catch (e) {
-                    await sock.sendMessage(sock.user.id, { text: `Erreur : ${e.message || e}` });
-                }
-
-                await delay(10);
-                await sock.ws.close();
-                removeFile('./temp/' + id);
-                process.exit();
-            }
-
-            if (connection === "close" && lastDisconnect && lastDisconnect.error && lastDisconnect.error.output.statusCode !== 401) {
-                removeFile('./temp/' + id);
-            }
-        });
-
-    } catch (err) {
-        console.log("Service Error");
-        removeFile('./temp/' + id);
-        if (!res.headersSent) {
-            res.json({ code: "❗ Service Unavailable" });
-        }
-    }
-});
-
-module.exports = router;
+      if (connection === 'open') {
+        console.log('✅ Bot connecté via QR.');
+      }
+    });
+  } catch (err) {
+    console.error(err);
+    res.status(500).json({ error: 'Erreur lors de la génération du QR code.' });
+  }
+};
