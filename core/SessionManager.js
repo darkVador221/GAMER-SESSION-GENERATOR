@@ -4,9 +4,8 @@ require('dotenv').config();
 
 class SessionManager {
     constructor() {
-        // Validation de la clé de session (32 octets = 64 caractères hex)
         if (!process.env.SESSION_KEY || process.env.SESSION_KEY.length !== 64) {
-            throw new Error("❌ SESSION_KEY invalide – 32 octets requis (64 caractères hexadécimaux)");
+            throw new Error("❌ SESSION_KEY invalide : 64 caractères hex requis");
         }
 
         this.uri = process.env.MONGODB_URI;
@@ -23,15 +22,16 @@ class SessionManager {
         try {
             await this.client.connect();
             this.db = this.client.db(this.dbName);
-            console.log(`✅ Connexion MongoDB établie [DB: ${this.dbName}]`);
+            console.log("✅ Connecté à MongoDB Atlas");
+            return true;
         } catch (err) {
-            console.error("❌ Erreur de connexion MongoDB :", err.message);
+            console.error("❌ Erreur MongoDB:", err.message);
             throw err;
         }
     }
 
     async saveSession(sessionData) {
-        if (!this.db) throw new Error("❌ Database non connectée");
+        if (!this.db) throw new Error("❌ Base MongoDB non initialisée");
 
         const sessionId = crypto.randomBytes(16).toString('hex');
         const encrypted = this.encrypt(sessionData);
@@ -45,25 +45,20 @@ class SessionManager {
             bot: process.env.BOT_NAME || "GAMER-XMD"
         });
 
-        console.log(`💾 Session sauvegardée : ${sessionId}`);
+        console.log(`💾 Session ${sessionId} sauvegardée`);
         return sessionId;
     }
 
     encrypt(data) {
-        try {
-            const iv = crypto.randomBytes(16);
-            const cipher = crypto.createCipheriv(
-                'aes-256-cbc',
-                Buffer.from(process.env.SESSION_KEY, 'hex'),
-                iv
-            );
-            let encrypted = cipher.update(JSON.stringify(data), 'utf8', 'hex');
-            encrypted += cipher.final('hex');
-            return iv.toString('hex') + ':' + encrypted;
-        } catch (err) {
-            console.error("❌ Erreur de chiffrement :", err.message);
-            throw new Error("Échec du chiffrement de session");
-        }
+        const iv = crypto.randomBytes(16);
+        const cipher = crypto.createCipheriv(
+            'aes-256-cbc',
+            Buffer.from(process.env.SESSION_KEY, 'hex'),
+            iv
+        );
+        let encrypted = cipher.update(JSON.stringify(data), 'utf8', 'hex');
+        encrypted += cipher.final('hex');
+        return iv.toString('hex') + ':' + encrypted;
     }
 }
 
