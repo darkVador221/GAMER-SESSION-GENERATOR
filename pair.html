@@ -1,9 +1,9 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="fr">
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>GAMER XMD - Pairing Code</title>
+  <title>GAMER XMD - Code de Parrainage</title>
   <style>
     body {
       background-image: url('https://files.catbox.moe/zzne7x.jpeg');
@@ -25,11 +25,12 @@
       border-radius: 15px;
       text-align: center;
       backdrop-filter: blur(10px);
+      max-width: 400px;
     }
 
     input[type="text"] {
       padding: 10px;
-      width: 80%;
+      width: 90%;
       border-radius: 8px;
       border: none;
       margin-bottom: 15px;
@@ -49,17 +50,25 @@
 
     .code {
       margin-top: 20px;
-      font-size: 22px;
+      font-size: 20px;
       color: #00ffae;
+      word-break: break-word;
+    }
+
+    .label {
+      font-size: 18px;
+      margin-bottom: 10px;
+      color: #ffd;
     }
   </style>
 </head>
 <body>
   <div class="container">
-    <h2>🔒 GÉNÉRATION DE CODE DE PARRAINAGE</h2>
-    <input type="text" id="phone" placeholder="Entrer votre numéro WhatsApp" />
+    <h2>🔐 GÉNÉRER UN CODE DE PARRAINAGE</h2>
+    <div class="label">Entrez votre numéro WhatsApp</div>
+    <input type="text" id="phone" placeholder="Ex : 22177xxxx" />
     <br />
-    <button onclick="generatePairCode()">Générer le code</button>
+    <button onclick="generatePairCode()">Générer</button>
     <div class="code" id="pairCode"></div>
   </div>
 
@@ -68,9 +77,14 @@
       const phone = document.getElementById('phone').value.trim();
       if (!phone) return alert('Veuillez entrer votre numéro.');
 
-      const response = await fetch('/pair?phone=' + encodeURIComponent(phone));
-      const html = await response.text();
-      document.getElementById('pairCode').innerHTML = html;
+      try {
+        const response = await fetch('/pair?phone=' + encodeURIComponent(phone));
+        const html = await response.text();
+        document.getElementById('pairCode').innerHTML = html;
+      } catch (err) {
+        document.getElementById('pairCode').innerHTML = '❌ Erreur de génération.';
+        console.error(err);
+      }
     }
   </script>
 </body>
