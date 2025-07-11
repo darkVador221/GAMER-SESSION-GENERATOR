@@ -1,33 +1,34 @@
 const express = require('express');
 const app = express();
+__path = process.cwd()
 const bodyParser = require("body-parser");
-const path = require('path');
 const PORT = process.env.PORT || 8000;
 
-// Fichiers internes
-const qrHandler = require('./qr');
-const pairHandler = require('./pair');
+let server = require('./qr');
+let code = require('./pair');
 
 require('events').EventEmitter.defaultMaxListeners = 500;
+
+app.use('/server', server);
+app.use('/code', code);
+
+app.use('/pair', async (req, res, next) => {
+  res.sendFile(__path + '/pair.html');
+});
+
+app.use('/qr', async (req, res, next) => {
+  res.sendFile(__path + '/qr.html');
+});
+
+app.use('/', async (req, res, next) => {
+  res.sendFile(__path + '/main.html');
+});
 
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true }));
 
-// Routes API
-app.get('/qr', qrHandler);
-app.get('/pair', pairHandler);
-
-// Routes UI
-app.get('/qr-ui', (req, res) => {
-  res.sendFile(path.join(__dirname, 'qr.html'));
-});
-app.get('/pair-ui', (req, res) => {
-  res.sendFile(path.join(__dirname, 'pair.html'));
-});
-app.get('/', (req, res) => {
-  res.sendFile(path.join(__dirname, 'main.html'));
-});
-
 app.listen(PORT, () => {
-  console.log(`✅ Gamer-XMD server running on http://localhost:${PORT}`);
+  console.log(`🚀 Gamer-XMD-MD server running on http://localhost:${PORT}`);
 });
+
+module.exports = app;
