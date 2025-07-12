@@ -13,20 +13,25 @@ router.get('/api/pair', async (req, res) => {
     if (!number) return res.status(400).json({ error: 'Numéro requis' });
 
     const client = new Client({
-        puppeteer: { headless: true },
+        puppeteer: { headless: true, args: ['--no-sandbox', '--disable-setuid-sandbox'] },
         authStrategy: new RemoteAuth({
             store: SessionManager,
             backupSyncIntervalMs: 300000
         })
     });
 
-    client.once('ready', async () => {
+    client.on('ready', async () => {
         try {
             const code = await client.requestPairingCode(number);
-            return res.json({ code });
+            return res.status(200).json({ code });
         } catch (error) {
             return res.status(500).json({ error: error.message });
         }
+    });
+
+    client.on('auth_failure', (msg) => {
+        console.error("Échec d'authentification :", msg);
+        return res.status(401).json({ error: "Échec d'authentification" });
     });
 
     client.initialize();
