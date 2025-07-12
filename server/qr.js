@@ -1,7 +1,7 @@
 const express = require('express');
 const router = express.Router();
 const { Client, RemoteAuth } = require('whatsapp-web.js');
-const SessionManager = require('../core/SessionManager');
+const SessionManager = require('../core/sessionManager');
 const path = require('path');
 
 router.get('/', (req, res) => {
