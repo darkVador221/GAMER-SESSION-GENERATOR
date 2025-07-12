@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8">
+  <title>Sessions Baileys</title>
+  <link rel="stylesheet" href="/assets/style.css">
+</head>
+<body class="home-bg">
+  <div class="container">
+    <h1>📋 Sessions WhatsApp Actives</h1>
+    <table id="sessionTable" border="1" style="width:100%; color:white;">
+      <thead>
+        <tr>
+          <th>📱 Téléphone</th>
+          <th>🆔 User ID</th>
+          <th>📅 Date</th>
+          <th>🧹 Action</th>
+        </tr>
+      </thead>
+      <tbody></tbody>
+    </table>
+  </div>
+
+  <script>
+    async function loadSessions() {
+      const res = await fetch('/api/sessions');
+      const sessions = await res.json();
+      const tbody = document.querySelector('#sessionTable tbody');
+      tbody.innerHTML = '';
+
+      sessions.forEach(sess => {
+        const tr = document.createElement('tr');
+        tr.innerHTML = `
+          <td>${sess.phone}</td>
+          <td>${sess.userId || '—'}</td>
+          <td>${new Date(sess.createdAt).toLocaleString()}</td>
+          <td><button onclick="deleteSession('${sess.phone}')">Supprimer</button></td>
+        `;
+        tbody.appendChild(tr);
+      });
+    }
+
+    async function deleteSession(phone) {
+      if (!confirm("Supprimer cette session ?")) return;
+      await fetch(`/api/sessions/${phone}`, { method: 'DELETE' });
+      loadSessions();
+    }
+
+    loadSessions();
+  </script>
+</body>
+</html>
