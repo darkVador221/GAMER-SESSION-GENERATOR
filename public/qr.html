@@ -1,0 +1,89 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>GAMER-XMD QR Code</title>
+  <style>
+    body {
+      background: url('https://files.catbox.moe/vewh4c.jpeg') no-repeat center center fixed;
+      background-size: cover;
+      font-family: 'Segoe UI', sans-serif;
+      color: cyan;
+      text-align: center;
+      margin: 0;
+      padding: 0;
+    }
+
+    .container {
+      margin-top: 80px;
+      background-color: rgba(0, 0, 0, 0.7);
+      padding: 30px;
+      border-radius: 20px;
+      display: inline-block;
+    }
+
+    #qr {
+      margin-top: 20px;
+      padding: 20px;
+      background-color: white;
+      border-radius: 10px;
+    }
+
+    button {
+      background-color: cyan;
+      color: black;
+      border: none;
+      padding: 10px 25px;
+      font-size: 16px;
+      border-radius: 10px;
+      cursor: pointer;
+      margin-top: 20px;
+    }
+
+    #status {
+      margin-top: 20px;
+      font-weight: bold;
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <h2>Scan this QR code with WhatsApp</h2>
+    <div id="qr">QR will appear here...</div>
+    <div id="status">🟡 Waiting...</div>
+    <button onclick="window.location.reload()">⟳ Refresh QR</button>
+  </div>
+
+  <script>
+    const qrContainer = document.getElementById("qr");
+    const status = document.getElementById("status");
+
+    const socket = new WebSocket("wss://" + window.location.host);
+
+    socket.onopen = () => {
+      status.textContent = "🟢 Connected to server...";
+    };
+
+    socket.onmessage = (event) => {
+      const data = JSON.parse(event.data);
+      if (data.qr) {
+        qrContainer.innerHTML = "";
+        const img = document.createElement("img");
+        img.src = data.qr;
+        img.alt = "QR Code";
+        img.style.width = "250px";
+        qrContainer.appendChild(img);
+        status.textContent = "📲 Scan this QR with WhatsApp";
+      } else if (data.ready) {
+        status.textContent = "✅ Connected successfully!";
+      } else if (data.error) {
+        status.textContent = "❌ Error: " + data.error;
+      }
+    };
+
+    socket.onerror = () => {
+      status.textContent = "🔴 Connection error!";
+    };
+  </script>
+</body>
+</html>
