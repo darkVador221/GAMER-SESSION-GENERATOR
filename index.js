@@ -1,13 +1,15 @@
 const express = require('express');
 const app = express();
 const path = require('path');
-const pairRouter = require('./server/pair');
+
+const pairRoute = require('./server/pair');
+const sessionManager = require('./core/sessionManager');
 
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 
 // Routes API
-app.use('/pair', pairRouter);
+app.use('/pair', pairRoute);
 
 // Fallback root route
 app.get('/', (req, res) => {
