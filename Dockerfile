@@ -1,17 +1,26 @@
-# Image Node officielle
 FROM node:18-alpine
 
-# Dossier de travail
 WORKDIR /app
 
-# Copie des fichiers
+# Installer dépendances système pour puppeteer
+RUN apk add --no-cache python3 make g++
+
+# Copier package.json + package-lock.json (si existant)
+COPY package.json ./
+
+# Installer uniquement les dépendances de production
+RUN npm install --omit=dev
+
+# Copier le reste de l'application
 COPY . .
 
-# Installation des dépendances
-RUN npm install
-
-# Port exposé
+# Définir port exposé
+ENV PORT=3000
 EXPOSE 3000
 
-# Lancement de l'app
-CMD ["npm", "start"]
+# Utilisateur non root
+RUN addgroup -S appgroup && adduser -S appuser -G appgroup
+USER appuser
+
+# Démarrer l'app
+CMD ["node", "index.js"]
