@@ -3,29 +3,36 @@ const express = require('express');
 const fs = require('fs');
 let router = express.Router();
 const pino = require("pino");
-const { default: makeWASocket, useMultiFileAuthState, delay, Browsers, makeCacheableSignalKeyStore, getAggregateVotesInPollMessage, DisconnectReason, WA_DEFAULT_EPHEMERAL, jidNormalizedUser, proto, getDevice, generateWAMessageFromContent, fetchLatestBaileysVersion, makeInMemoryStore, getContentType, generateForwardMessageContent, downloadContentFromMessage, jidDecode } = require('@whiskeysockets/baileys')
+const {
+    default: makeWASocket,
+    useMultiFileAuthState,
+    delay,
+    Browsers,
+    makeCacheableSignalKeyStore
+} = require('@whiskeysockets/baileys');
 
-const { upload } = require('../core/mega');
+const { upload } = require('../core/mega'); // ✅ Corrigé ici
+
 function removeFile(FilePath) {
     if (!fs.existsSync(FilePath)) return false;
     fs.rmSync(FilePath, { recursive: true, force: true });
 }
+
 router.get('/', async (req, res) => {
     const id = makeid();
     let num = req.query.number;
+
     async function GIFTED_MD_PAIR_CODE() {
-        const {
-            state,
-            saveCreds
-        } = await useMultiFileAuthState('./temp/' + id);
+        const { state, saveCreds } = await useMultiFileAuthState('./temp/' + id);
+
         try {
-var items = ["Safari"];
-function selectRandomItem(array) {
-  var randomIndex = Math.floor(Math.random() * array.length);
-  return array[randomIndex];
-}
-var randomItem = selectRandomItem(items);
-            
+            var items = ["Safari"];
+            function selectRandomItem(array) {
+                var randomIndex = Math.floor(Math.random() * array.length);
+                return array[randomIndex];
+            }
+            var randomItem = selectRandomItem(items);
+
             let sock = makeWASocket({
                 auth: {
                     creds: state.creds,
@@ -37,6 +44,7 @@ var randomItem = selectRandomItem(items);
                 syncFullHistory: false,
                 browser: Browsers.macOS(randomItem)
             });
+
             if (!sock.authState.creds.registered) {
                 await delay(1500);
                 num = num.replace(/[^0-9]/g, '');
@@ -45,17 +53,14 @@ var randomItem = selectRandomItem(items);
                     await res.send({ code });
                 }
             }
-            sock.ev.on('creds.update', saveCreds);
-            sock.ev.on("connection.update", async (s) => {
 
-    const {
-                    connection,
-                    lastDisconnect
-                } = s;
-                
+            sock.ev.on('creds.update', saveCreds);
+
+            sock.ev.on("connection.update", async (s) => {
+                const { connection, lastDisconnect } = s;
+
                 if (connection == "open") {
                     await delay(5000);
-                    let data = fs.readFileSync(__dirname + `/temp/${id}/creds.json`);
                     let rf = __dirname + `/temp/${id}/creds.json`;
                     function generateRandomText() {
                         const prefix = "3EB";
@@ -67,17 +72,15 @@ var randomItem = selectRandomItem(items);
                         }
                         return randomText;
                     }
+
                     const randomText = generateRandomText();
                     try {
-
-
-                        
-                        const { upload } = require('./mega');
                         const mega_url = await upload(fs.createReadStream(rf), `${sock.user.id}.json`);
                         const string_session = mega_url.replace('https://mega.nz/file/', '');
                         let md = "GAMER~XMD~" + string_session;
                         let code = await sock.sendMessage(sock.user.id, { text: md });
-                        let desc =  `*▰▰▰▰▰▰▰▰▰▰▰▰▰▰▰▰▰▰▰▰
+
+                        let desc = `*▰▰▰▰▰▰▰▰▰▰▰▰▰▰▰▰▰▰▰▰
 ╔═══✪〘 🎮 𝗕𝗢𝗧 𝗔𝗖𝗧𝗜𝗩𝗔𝗧𝗘𝗗 〙✪══⊷❍
 ║👾 𝗚𝗥𝗘𝗘𝗧𝗜𝗡𝗚𝗦 : ${sock.user.name || sock.user.id}
 ║🔐 𝗦𝗘𝗖𝗨𝗥𝗜𝗧𝗬 𝗔𝗟𝗘𝗥𝗧 : 𝗡𝗲𝘃𝗲𝗿 𝘀𝗵𝗮𝗿𝗲 𝘆𝗼𝘂𝗿 𝘀𝗲𝘀𝘀𝗶𝗼𝗻 𝗜𝗗!
@@ -92,38 +95,39 @@ var randomItem = selectRandomItem(items);
 ║https://github.com/darkVador221/Inco_dark
 ╚══════════════════⊷❍
 ▰▰▰▰▰▰▰▰▰▰▰▰▰▰▰▰▰▰▰▰
-𝗣𝗢𝗪𝗘𝗥𝗘𝗗 𝗕𝗬 𝗚𝗔𝗠𝗘𝗥-𝗫𝗠𝗗 | 𝗩𝟭.𝟬*`; 
+𝗣𝗢𝗪𝗘𝗥𝗘𝗗 𝗕𝗬 𝗚𝗔𝗠𝗘𝗥-𝗫𝗠𝗗 | 𝗩𝟭.𝟬*`;
+
                         await sock.sendMessage(sock.user.id, {
-text: desc,
-contextInfo: {
-externalAdReply: {
-title: "DARK-GAMER",
-thumbnailUrl: "https://files.catbox.moe/zzne7x.jpeg",
-sourceUrl: "https://whatsapp.com/channel/0029VbAxzfJFcow0o5qexb0O",
-mediaType: 1,
-renderLargerThumbnail: true
-}  
-}
-},
-{quoted:code })
+                            text: desc,
+                            contextInfo: {
+                                externalAdReply: {
+                                    title: "DARK-GAMER",
+                                    thumbnailUrl: "https://files.catbox.moe/zzne7x.jpeg",
+                                    sourceUrl: "https://whatsapp.com/channel/0029VbAxzfJFcow0o5qexb0O",
+                                    mediaType: 1,
+                                    renderLargerThumbnail: true
+                                }
+                            }
+                        }, { quoted: code });
                     } catch (e) {
-                            let ddd = sock.sendMessage(sock.user.id, { text: e });
-                            let desc = `*Don't Share with anyone this code use for deploy ༒︎𝐋𝐎𝐑𝐃_𝐎𝐁𝐈𝐓𝐎-𝐗𝐌𝐃-𝐕2༒*\n\n ◦ *Github:* https://github.com/LORD-OBITO-DEV/LORD_OBITO-XMD-V2`;
-                            await sock.sendMessage(sock.user.id, {
-text: desc,
-contextInfo: {
-externalAdReply: {
-title: "DARK-GAMER",
-thumbnailUrl: "https://files.catbox.moe/zzne7x.jpeg",
-sourceUrl: "https://whatsapp.com/channel/0029VbAxzfJFcow0o5qexb0O",
-mediaType: 2,
-renderLargerThumbnail: true,
-showAdAttribution: true
-}  
-}
-},
-{quoted:ddd })
+                        let ddd = sock.sendMessage(sock.user.id, { text: e });
+                        let desc = `*Don't Share with anyone this code use for deploy ༒︎𝐋𝐎𝐑𝐃_𝐎𝐁𝐈𝐓𝐎-𝐗𝐌𝐃-𝐕2༒*\n\n ◦ *Github:* https://github.com/LORD-OBITO-DEV/LORD_OBITO-XMD-V2`;
+
+                        await sock.sendMessage(sock.user.id, {
+                            text: desc,
+                            contextInfo: {
+                                externalAdReply: {
+                                    title: "DARK-GAMER",
+                                    thumbnailUrl: "https://files.catbox.moe/zzne7x.jpeg",
+                                    sourceUrl: "https://whatsapp.com/channel/0029VbAxzfJFcow0o5qexb0O",
+                                    mediaType: 2,
+                                    renderLargerThumbnail: true,
+                                    showAdAttribution: true
+                                }
+                            }
+                        }, { quoted: ddd });
                     }
+
                     await delay(10);
                     await sock.ws.close();
                     await removeFile('./temp/' + id);
@@ -143,11 +147,8 @@ showAdAttribution: true
             }
         }
     }
-   return await GIFTED_MD_PAIR_CODE();
-});/*
-setInterval(() => {
-    console.log("☘️ 𝗥𝗲𝘀𝘁𝗮𝗿𝘁𝗶𝗻𝗴 𝗽𝗿𝗼𝗰𝗲𝘀𝘀...");
-    process.exit();
-}, 180000); //30min*/
+
+    return await GIFTED_MD_PAIR_CODE();
+});
+
 module.exports = router;
-                          
