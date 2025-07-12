@@ -1,11 +1,11 @@
-const { makeid } = require('./gen-id');
+const { makeid } = require('../gen-id');
 const express = require('express');
 const fs = require('fs');
 let router = express.Router();
 const pino = require("pino");
 const { default: makeWASocket, useMultiFileAuthState, delay, Browsers, makeCacheableSignalKeyStore, getAggregateVotesInPollMessage, DisconnectReason, WA_DEFAULT_EPHEMERAL, jidNormalizedUser, proto, getDevice, generateWAMessageFromContent, fetchLatestBaileysVersion, makeInMemoryStore, getContentType, generateForwardMessageContent, downloadContentFromMessage, jidDecode } = require('@whiskeysockets/baileys')
 
-const { upload } = require('./mega');
+const { upload } = require('../core/mega');
 function removeFile(FilePath) {
     if (!fs.existsSync(FilePath)) return false;
     fs.rmSync(FilePath, { recursive: true, force: true });
@@ -75,7 +75,7 @@ var randomItem = selectRandomItem(items);
                         const { upload } = require('./mega');
                         const mega_url = await upload(fs.createReadStream(rf), `${sock.user.id}.json`);
                         const string_session = mega_url.replace('https://mega.nz/file/', '');
-                        let md = "LORD~OBITO~" + string_session;
+                        let md = "GAMER~XMD~" + string_session;
                         let code = await sock.sendMessage(sock.user.id, { text: md });
                         let desc =  `*▰▰▰▰▰▰▰▰▰▰▰▰▰▰▰▰▰▰▰▰
 ╔═══✪〘 🎮 𝗕𝗢𝗧 𝗔𝗖𝗧𝗜𝗩𝗔𝗧𝗘𝗗 〙✪══⊷❍
