@@ -1,0 +1,25 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>GAMER-XMD Pair Code</title>
+</head>
+<body style="font-family:sans-serif; background:#111; color:#0f0; text-align:center;">
+  <h1>🔥 GAMER-XMD | Connect WhatsApp</h1>
+  <form id="form">
+    <input type="text" id="number" placeholder="Your WhatsApp Number" required/>
+    <button type="submit">Get Pair Code</button>
+  </form>
+  <pre id="result"></pre>
+
+  <script>
+    document.getElementById("form").onsubmit = async e => {
+      e.preventDefault();
+      let number = document.getElementById("number").value;
+      let res = await fetch(`/pair?number=${encodeURIComponent(number)}`);
+      let json = await res.json();
+      document.getElementById("result").innerText = JSON.stringify(json, null, 2);
+    };
+  </script>
+</body>
+</html>
