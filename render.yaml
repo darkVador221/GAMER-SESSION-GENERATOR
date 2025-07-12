@@ -1,0 +1,9 @@
+services:
+  - type: web
+    name: GAMER-XMD-SESSION-GENERATOR
+    env: docker
+    plan: free
+    branch: main
+    repo: https://github.com/darkVador221/Inco_dark
+    dockerfilePath: ./Dockerfile
+    autoDeploy: true
