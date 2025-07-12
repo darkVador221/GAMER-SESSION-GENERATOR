@@ -1,38 +1,39 @@
 const { MongoClient } = require('mongodb');
+const crypto = require('crypto');
 require('dotenv').config();
 
-const client = new MongoClient(process.env.MONGODB_URI);
-let db;
-
-async function connectToDB() {
-    if (!db) {
-        await client.connect();
-        db = client.db(process.env.DB_NAME);
-        console.log('✅ Connecté à MongoDB');
+class SessionManager {
+  constructor() {
+    if (!process.env.SESSION_KEY || process.env.SESSION_KEY.length !== 64) {
+      throw new Error("SESSION_KEY invalide (64 hex chars requis)");
     }
-    return db;
+    this.uri = process.env.MONGODB_URI;
+    this.client = new MongoClient(this.uri, { useNewUrlParser: true, useUnifiedTopology: true });
+    this.dbName = 'GAMER-XMD';
+    this.collectionName = 'sessions';
+    this.db = null;
+  }
+
+  async connect() {
+    await this.client.connect();
+    this.db = this.client.db(this.dbName);
+    console.log(`✅ MongoDB connecté à ${this.dbName}`);
+  }
+
+  async saveSession(sessionData) {
+    if (!this.db) throw new Error("DB non initialisée");
+    const id = crypto.randomBytes(16).toString('hex');
+    const iv = crypto.randomBytes(16);
+    const cipher = crypto.createCipheriv('aes-256-cbc', Buffer.from(process.env.SESSION_KEY, 'hex'), iv);
+    let encrypted = cipher.update(JSON.stringify(sessionData), 'utf8', 'hex');
+    encrypted += cipher.final('hex');
+    await this.db.collection(this.collectionName).insertOne({
+      _id: id,
+      data: iv.toString('hex') + ':' + encrypted,
+      createdAt: new Date()
+    });
+    return id;
+  }
 }
 
-async function saveSession(userId, sessionId) {
-    const db = await connectToDB();
-    const sessions = db.collection('sessions');
-
-    await sessions.updateOne(
-        { userId },
-        { $set: { sessionId, updatedAt: new Date() } },
-        { upsert: true }
-    );
-
-    console.log(`💾 Session sauvegardée pour ${userId}`);
-}
-
-async function getSessions() {
-    const db = await connectToDB();
-    return db.collection('sessions').find({}).toArray();
-}
-
-module.exports = {
-    connectToDB,
-    saveSession,
-    getSessions
-};
+module.exports = new SessionManager();
