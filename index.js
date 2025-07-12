@@ -1,32 +1,24 @@
-// index.js – GAMER-XMD Entrypoint 🚀
-
-console.log('🟢 Starting GAMER-XMD...');
-
 const express = require('express');
 const app = express();
 const path = require('path');
-const bodyParser = require('body-parser');
-const pairRoute = require('./pair'); // Fichier de connexion via code de parrainage
-const sessionManager = require('./sessionManager'); // Fichier de gestion de session (nécessaire au déploiement stable)
+const pairRouter = require('./server/pair');
 
-// Middleware
-app.use(bodyParser.json());
-app.use(bodyParser.urlencoded({ extended: true }));
+app.use(express.json());
+app.use(express.urlencoded({ extended: true }));
 
-// Serveur de fichiers statiques (si tu veux y ajouter un frontend plus tard)
-app.use(express.static(path.join(__dirname, 'public')));
+// Routes API
+app.use('/pair', pairRouter);
 
-// Routes principales
-app.use('/pair', pairRoute); // Route de génération du code pairing
-
-// Page d’accueil simple
+// Fallback root route
 app.get('/', (req, res) => {
-    res.send(`<h2>🚀 GAMER-XMD BACKEND IS RUNNING!</h2>
-    <p>🔗 Pour générer un pairing code, ajoute ?number=+votrenuméro à /pair</p>`);
+    res.send('🔥 GAMER-XMD API is running. Use /pair?number=+221xxxxxx to generate your code.');
 });
 
-// Démarrer le serveur
+// Static if needed
+app.use('/public', express.static(path.join(__dirname, 'public')));
+
+// Port setting
 const PORT = process.env.PORT || 5000;
 app.listen(PORT, () => {
-    console.log(`✅ GAMER-XMD ready on port ${PORT}`);
+    console.log(`🚀 GAMER-XMD is live on port ${PORT}`);
 });
