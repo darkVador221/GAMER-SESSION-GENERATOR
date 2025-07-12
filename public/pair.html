@@ -1,0 +1,74 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>GAMER-XMD Pair Code</title>
+  <style>
+    body {
+      background: url('https://files.catbox.moe/74spgs.jpeg') no-repeat center center fixed;
+      background-size: cover;
+      font-family: 'Segoe UI', sans-serif;
+      color: cyan;
+      text-align: center;
+      margin: 0;
+      padding: 0;
+    }
+    .container {
+      margin-top: 100px;
+      background-color: rgba(0, 0, 0, 0.7);
+      padding: 30px;
+      border-radius: 20px;
+      display: inline-block;
+    }
+    input {
+      padding: 10px;
+      width: 80%;
+      font-size: 16px;
+      border-radius: 10px;
+      border: none;
+      margin-bottom: 20px;
+    }
+    button {
+      background-color: cyan;
+      color: black;
+      border: none;
+      padding: 10px 25px;
+      font-size: 16px;
+      border-radius: 10px;
+      cursor: pointer;
+    }
+    #result {
+      margin-top: 20px;
+      word-wrap: break-word;
+      color: white;
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <h2>Enter your WhatsApp number with country code</h2>
+    <input type="text" id="number" placeholder="EX : +221XXXXXXXXX" />
+    <br />
+    <button onclick="generateCode()">🔑 Generate Pair Code</button>
+    <div id="result">Your pair code will appear here</div>
+  </div>
+
+  <script>
+    async function generateCode() {
+      const number = document.getElementById("number").value;
+      if (!number) {
+        alert("Please enter a number.");
+        return;
+      }
+
+      const res = await fetch("/pair?number=" + encodeURIComponent(number));
+      const data = await res.json();
+      if (data.code) {
+        document.getElementById("result").innerText = "✅ Your Code: " + data.code;
+      } else {
+        document.getElementById("result").innerText = "❌ Unable to generate code.";
+      }
+    }
+  </script>
+</body>
+</html>
